@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}
+    Your Order
+{% endblock %}
+
+
+{% block content %}
+{% if empty %}
+    <h1>{{ empty_message }}</h1>
+{% else %}
+
+
+    <div class="container">
+        <div class="row" style="margin-top: 6%">
+            <table class="table table-striped table-hover">
+                <thead style="background-color: #5AC8FA">
+                    <tr>
+                        <th>Survey</th>
+                        <th>Parameters </th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in cart.cart_items.all %}
+                    {% with survey=item.survey %}
+                        <tr>
+                            <td>
+                                {{ survey.name }}
+                            </td>
+                            <td>All: {{ item.parameters.count }}</td>
+                            <td>
+                                <a href="{% url 'patients:cart_item_delete' item.pk %}">Remove</a>
+                            </td>
+                        </tr>
+                        {% for parameter in item.parameters.all %}
+                            <tr>
+                                <td></td>
+                                <td>{{ parameter.name }}</td>
+                                <td></td>
+                            </tr>
+                        {% endfor %}
+                    {% endwith %}
+                {% endfor %}
+                <tr style="background-color: #5AC8FA">
+                    <td><b>Total</b></td>
+                    <td colspan="4"></td>
+                    <td colspan="num"><b>{{ cart.cart_items.count }}</b></td>
+                </tr>
+                </tbody>
+            </table>
+        <p class="text-right">
+            <a href="{% url 'patients:survey_list' %}" class="btn btn-default">Continue Shopping</a>
+            <a href="{% url 'patients:order_checkout' %}" class="btn btn-primary">Checkout</a>
+        </p>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

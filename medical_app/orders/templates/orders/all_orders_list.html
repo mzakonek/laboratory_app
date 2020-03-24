@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}
+    Orders history
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+    <div class="row" style="margin-top: 6%">
+        <table class="table table-striped table-hover">
+            <thead style="background-color: #5AC8FA">
+                <tr>
+                    <th>Order ID</th>
+                    <th>Surveys ordered</th>
+                    <th>Created at</th>
+                    <th>Finished at</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for order in orders %}
+                    <tr>
+                        <td><a href="{% url 'specialists:orders_items_update' order.pk %}">{{ order.pk }}</a></td>
+                        <td>{{ order.get_number_of_surveys }}</td>
+                        <td>{{ order.created_at }}</td>
+                        <td>{{ item.finished_at }}</td>
+                        <td>{{ order.status }}</td>
+                    </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if is_paginated %}
+    {% if page_obj.has_previous %}
+        <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+    {% endif %}
+
+{% endif %}
+
+{% endblock %}
+
+
+
+
+

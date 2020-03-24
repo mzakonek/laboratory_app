@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Register in our Laboratory</h2>
+  <p class="lead">Select below the type of account you want to create</p>
+
+
+  <a href="{% url 'patient_signup' %}" class="btn btn-lg btn-block btn-primary" role="button">Patient</a>
+  <a href="{% url 'specialist_signup' %}" class="btn btn-lg btn-block" role="button">Laboratory specialist</a>
+
+  <div class="mt-5">
+    <a href="{% url 'login' %}">Already having account?</a>
+  </div>
+
+{% endblock %}

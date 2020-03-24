@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="{% static 'js/scripts.js' %}"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"  crossorigin="anonymous">
+<!--    <link href="{% static 'css/main.css' %}" rel="stylesheet">-->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+    <meta charset="UTF-8">
+
+
+    <title>{% block title %}Laboratory App{% endblock %}</title>
+
+</head>
+<body>
+    <header class="site-header">
+      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+        <div class="container">
+          <a class="navbar-brand mr-4" href="{% url 'home' %}">Laboratory</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+            </div>
+            <!-- Navbar Right Side -->
+            <div class="navbar-nav">
+                {% if user.is_authenticated %}
+                  <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
+                {% else %}
+                  <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+                  <a class="nav-item nav-link" href="{% url 'signup' %}">Register</a>
+                {% endif %}
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main role="main" class="container">
+      <div class="row">
+        <div class="col-md-8">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+          {% block content %}{% endblock %}
+        </div>
+        {% if user.is_authenticated %}
+
+        <div class="col-md-4">
+          <div class="content-section">
+            <p class='text-muted'>
+                  <div class="list-group">
+                        {% if user.is_patient %}
+                            <a href="{% url 'patients:survey_list' %}" class="list-group-item list-group-item-primary">Order new surveys</a>
+                            <a href="{% url 'patients:cart_details' %}" class="list-group-item list-group-item-primary">Your current order</a>
+                            <a href="{% url 'patients:order_list' %}" class="list-group-item list-group-item-primary">Your surveys history</a>
+                        {% else %}
+                            <a href="{% url 'specialists:survey_list' %}" class="list-group-item list-group-item-primary">Surveys list</a>
+                            <a href="{% url 'specialists:survey_add' %}" class="list-group-item list-group-item-primary">Add new Survey</a>
+                            <a href="{% url 'specialists:parameter_add' %}" class="list-group-item list-group-item-primary">Add new Parameter</a>
+                            <a href="{% url 'specialists:orders_list' %}" class="list-group-item list-group-item-primary">All orders</a>
+
+
+                        {% endif %}
+                  </div>
+
+            </p>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+    </main>
+
+    {% block extrajavascript %}{% endblock extrajavascript %}
+
+</body>
+</html>

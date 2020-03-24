@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}
+    Orders history
+{% endblock %}
+
+
+{% block content %}
+{% if empty %}
+    <h1>{{ empty_message }}</h1>
+{% else %}
+
+
+    <div class="container">
+        <div class="row" style="margin-top: 6%">
+            <table class="table table-striped table-hover">
+                <thead style="background-color: #5AC8FA">
+                    <tr>
+                        <th>Survey</th>
+                        <th>Parameter</th>
+                        <th>Result</th>
+                        <th>Finished at</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in cart_items %}
+                    {% for param_with_result in item.parameters_results.all %}
+                        <tr>
+                            <td>{{ item.survey.name }}</td>
+                            <td>{{ param_with_result.parameter.name }}</td>
+                            <td>{{ param_with_result.result }}</td>
+                            <td>{{ item.finished_at }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

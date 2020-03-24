@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Update surveys results</h1>
+  <h1>IT IS NOT WORKING FINE yet...</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ formset.as_p }}
+    <input type="submit" value="save all products">
+  </form>
+{% endblock %}
