@@ -1,2 +1,11 @@
 select orders which have more than 2 surveys
-select * from orders_order where cart_id in (select cart_cart.id from cart_cart inner join cart_cartitem on cart_cartitem.cart_id=cart_cart.id group by cart_cart.id having count(cart_cartitem.cart_id) > 2);
+
+select * 
+from orders_order 
+where cart_id in (
+	select cart_cart.id 
+	from cart_cart 
+	inner join cart_cartitem on cart_cartitem.cart_id=cart_cart.id 
+	group by cart_cart.id 
+	having count(cart_cartitem.cart_id) > 2
+);
