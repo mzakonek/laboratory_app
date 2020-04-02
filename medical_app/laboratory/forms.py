@@ -1,4 +1,5 @@
 from django import forms
+
 from .models import Survey, Parameter
 
 
@@ -23,3 +24,11 @@ class OrderSurveyWithParameters(forms.Form):
         super(OrderSurveyWithParameters, self).__init__(*args, **kwargs)
         self.fields['available_parameters'].queryset = survey.parameters.all()
 
+
+class ParameterForm(forms.ModelForm):
+    class Meta:
+        model = Parameter
+        fields = ('name',)
+
+
+ParameterFormSet = forms.modelformset_factory(Parameter, fields=('name',), extra=5, min_num=1)

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <h2 class="mb-3">Add a new {{ type_to_add }}</h2>
+
+  <div class="row">
+    <div class="col-md-6 col-sm-8 col-12">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {{ formset.management_form }}
+        {% for form in formset %}
+            {{ form|crispy }}<br>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-success">Save</button>
+        <a href="{% url 'home' %}" class="btn btn-outline-secondary" role="button">Nevermind</a>
+      </form>
+    </div>
+  </div>
+
+  {% if update_view and survey.owner == user %}
+    <div>
+      <a type="button" class="btn btn-outline-danger btn-sm mt-1 mb-1" href="{% url 'specialists:survey_delete' object.id %}">Delete</a>
+    </div>
+  {% endif %}
+{% endblock %}

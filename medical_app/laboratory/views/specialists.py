@@ -1,11 +1,10 @@
 from django.contrib import messages
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.views.generic import CreateView, UpdateView, ListView, DeleteView
-from django.urls import reverse_lazy
 
 
 from ..models import Survey, Parameter
-from ..forms import AssignParamsToSurveyForm
+from ..forms import AssignParamsToSurveyForm, ParameterFormSet, ParameterForm
 
 
 class SurveyCreateView(CreateView):
@@ -54,21 +53,28 @@ class SurveyDeleteView(DeleteView):
 
 class ParameterCreateView(CreateView):
     model = Parameter
-    fields = ('name', 'description')
-    template_name = 'laboratory/specialists/add_form.html'
-    success_url = reverse_lazy('specialists:parameter_add')
-
-    def form_valid(self, form):
-        parameter = form.save(commit=False)
-        parameter.save()
-        messages.success(self.request, "The new Parameter for Surveys was created with success! "
-                                       "Go ahead and assign this parameter to Surveys or create new Parameter.")
-        return redirect('specialists:parameter_add')
+    template_name = 'laboratory/specialists/add_formset.html'
+    form_class = ParameterForm
 
     def get_context_data(self, **kwargs):
         context = super(ParameterCreateView, self).get_context_data(**kwargs)
-        context['type_to_add'] = "Parameter of Surveys"
+        context['formset'] = ParameterFormSet(queryset=Parameter.objects.none())
+        context['type_to_add'] = 'Parameters'
         return context
+
+    def post(self, request, *args, **kwargs):
+        formset = ParameterFormSet(request.POST)
+        if formset.is_valid():
+            return self.form_valid(formset)
+        return render(request, self.template_name, {'formset': formset})
+
+    def form_valid(self, formset):
+        instances = formset.save(commit=False)
+        for instance in instances:
+            instance.save()
+        messages.success(self.request, "The new Parameters were created with success! "
+                                       "Go ahead and assign them to Surveys or create new Parameters!")
+        return redirect('specialists:parameter_add')
 
 
 class AssignParamsToSurveyView(UpdateView):
