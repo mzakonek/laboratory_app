@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView
+from django.views.generic import ListView, UpdateView, DetailView
 from django.db.models.functions import Now
 from django.forms import modelformset_factory, inlineformset_factory
 from cart.models import Cart, CartItem, ParameterWithResult
+from cart.forms import ParameterWithResultForm, ParameterWithResultFormSet
 from django.conf import settings
 from .models import Order
 
@@ -49,12 +50,20 @@ class UserOrdersListView(ListView):
 
 
 class OrdersListView(ListView):
-    """List all Orders with the Pending status"""
+    """List all Orders with the Pending status ??"""
     model = Order
-    template_name = 'orders/all_orders_list.html'
+    template_name = 'orders/orders_list.html'
     context_object_name = 'orders'
     ordering = ['-status']
     paginate_by = 4
+
+
+class OrdersDetailView(DetailView):
+    model = Order
+    template_name = 'orders/orders_detail.html'
+    ordering = ['-created_at']
+
+
 
 #
 # def edit_order_items(request, pk):
@@ -102,6 +111,16 @@ class OrdersListView(ListView):
 #
 
 
+class ParameterWithResultsUpdateView(UpdateView):
+    model = ParameterWithResult
+    template_name = 'orders/order_items_update_formset.html'
+    form_class = ParameterWithResult
+
+    def get_context_data(self, **kwargs):
+        context = super(ParameterWithResultsUpdateView, self).get_context_data(**kwargs)
+        context['formset'] = ParameterWithResultFormset(queryset=Parameter.objects.none())
+
+
 def edit_order_items(request, pk):
     """View for updating all order items at once """
 
@@ -114,8 +133,9 @@ def edit_order_items(request, pk):
     order = get_object_or_404(Order, pk=pk)
     ordered_cart_items_pks = [i.pk for i in order.cart.cart_items.all()]
     params_and_results = ParameterWithResult.objects.filter(pk__in=ordered_cart_items_pks)
+    print(len(params_and_results))
 
-    ProductFormSet = modelformset_factory(ParameterWithResult, fields=('parameter', 'result'), extra=0)
+    ProductFormSet = modelformset_factory(ParameterWithResult, fields=('parameter', 'result'), exclude=('parameter',), extra=0)
     data = request.POST or None
 
     formset = ProductFormSet(data=data, initial=params_and_results)

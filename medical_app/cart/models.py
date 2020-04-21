@@ -23,7 +23,7 @@ class CartItem(models.Model):
     # parameters are here as ParameterWIthResult table, because we need to assign additional field "result" to it
     parameters = models.ManyToManyField(Parameter, through="ParameterWithResult", related_name='parameter_orders', null=True)
 
-    finished_at = models.DateTimeField(null=True)
+    finished_at = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return f'Cart Item id {self.pk} '

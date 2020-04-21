@@ -1,8 +1,8 @@
 from django.urls import include, path
 
 from .views import laboratory, specialists, patients
-from cart.views import CartItemDeleteView, cart_details_view
-from orders.views import order_checkout, UserOrdersListView, OrdersListView, edit_order_items
+from cart.views import CartItemDeleteView, cart_details_view, CartItemUpdate
+from orders.views import order_checkout, UserOrdersListView, OrdersListView, edit_order_items, OrdersDetailView
 
 
 from decorator_include import decorator_include
@@ -23,8 +23,10 @@ urlpatterns = [
                name='survey_delete'),
             path('parameters/add/', specialists.ParameterCreateView.as_view(),
                name='parameter_add'),
+
             path('orders/', OrdersListView.as_view(), name='orders_list'),
-            path('orders/<int:pk>/update', edit_order_items, name='orders_items_update'),
+            path('orders/<int:pk>/', OrdersDetailView.as_view(), name='orders_detail'),
+            path('orders/item/<int:pk>/', CartItemUpdate.as_view(), name='orders_items_update'),
         ], 'laboratory'), namespace='specialists'))),
 
 

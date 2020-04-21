@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            Fill results of the surveys
+            <br>Parameter, User and Survey should not be allowed to change, it should be static, based on the query
+        </div>
+        <div class="card-body">
+             {% crispy form %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
