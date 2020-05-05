@@ -1,7 +1,7 @@
 from django.urls import include, path
 
 from .views import laboratory, specialists, patients
-from cart.views import CartItemDeleteView, cart_details_view, CartItemUpdate
+from cart.views import CartItemDeleteView, cart_details_view, CartItemUpdateView
 from orders.views import order_checkout, UserOrdersListView, OrdersListView, edit_order_items, OrdersDetailView
 
 
@@ -14,20 +14,28 @@ urlpatterns = [
     path('', laboratory.home, name='home'),
 
     path('specialists/', decorator_include(
-        (login_required, specialist_required), include(([
-            path('surveys/', specialists.SurveyListView.as_view(), name='survey_list'),
-            path('surveys/add/', specialists.SurveyCreateView.as_view(), name='survey_add'),
-            path('surveys/<int:pk>/update/', specialists.AssignParamsToSurveyView.as_view(),
-               name='survey_update'),
-            path('surveys/<int:pk>/delete/', specialists.SurveyDeleteView.as_view(),
-               name='survey_delete'),
-            path('parameters/add/', specialists.ParameterCreateView.as_view(),
-               name='parameter_add'),
+        (login_required, specialist_required), include(
+            (
+                [
+                    path('surveys/', specialists.SurveyListView.as_view(), name='survey_list'),
+                    path('surveys/add/', specialists.SurveyCreateView.as_view(), name='survey_add'),
+                    path('surveys/<int:pk>/update/', specialists.AssignParamsToSurveyView.as_view(),
+                       name='survey_update'),
+                    path('surveys/<int:pk>/delete/', specialists.SurveyDeleteView.as_view(),
+                       name='survey_delete'),
+                    path('parameters/add/', specialists.ParameterCreateView.as_view(),
+                       name='parameter_add'),
 
-            path('orders/', OrdersListView.as_view(), name='orders_list'),
-            path('orders/<int:pk>/', OrdersDetailView.as_view(), name='orders_detail'),
-            path('orders/item/<int:pk>/', CartItemUpdate.as_view(), name='orders_items_update'),
-        ], 'laboratory'), namespace='specialists'))),
+                    path('orders/', OrdersListView.as_view(), name='orders_list'),
+                    path('orders/<int:pk>/', OrdersDetailView.as_view(), name='orders_detail'),
+                    path('orders/orderitem/<int:pk>/', CartItemUpdateView.as_view(), name='orders_items_update'),
+
+                ],
+                'laboratory'
+            ),
+            namespace='specialists'
+        )
+    )),
 
 
     path('patients/', decorator_include(
