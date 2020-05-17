@@ -14,6 +14,11 @@ It is divided into two parts:
     - check list with pending surveys
     - fill results to the surveys
 
+## Models
+![](dbschema.jpg)
+
+
+
 ## Installation
 Database file with some example data is already in the repository, so all you need to do is:
 ```bash
@@ -22,7 +27,11 @@ cd medical_app && python manage.py runserver
 ```
 
 ### TODO
-- Send to patient notification with the link, when their results will be ready.
-- Improve table with pending surveys at laboratory specialist panel. 
+- Send to patient notification with the link, when their results will be ready
+- Show patients unordered items from their baskets in the last time (as CART model holds patient ID), to let them continue ordering them
+- Improve table with pending surveys at laboratory specialist panel
+- Clean fields at models, work on auto-removing unnecessary records from database
 - Tests
+
+
 
